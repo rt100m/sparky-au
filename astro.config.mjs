@@ -15,11 +15,32 @@ import cloudflare from '@astrojs/cloudflare';
 // `process is not defined` inside Keystatic's Node-based GitHub setup).
 const forDeploy = process.env.CF_DEPLOY === '1';
 const withAdmin = forDeploy || process.env.ADMIN === '1';
+
+// Keystatic ≤5.2.0's API route reads Astro.locals.runtime.env, whose getter
+// THROWS on Astro v6+'s Cloudflare adapter (500 on every /api/keystatic call).
+// Wrap the integration and swap that one injected route for our fixed copy
+// (src/lib/keystatic-api-route.ts). Delete this wrapper when Keystatic fixes it.
+function keystaticFixed() {
+  const k = keystatic();
+  const setup = k.hooks['astro:config:setup'];
+  k.hooks['astro:config:setup'] = (opts) =>
+    setup({
+      ...opts,
+      injectRoute: (route) =>
+        opts.injectRoute(
+          route.pattern === '/api/keystatic/[...params]'
+            ? { ...route, entrypoint: './src/lib/keystatic-api-route.ts', entryPoint: './src/lib/keystatic-api-route.ts' }
+            : route
+        ),
+    });
+  return k;
+}
+
 export default defineConfig({
   site: 'https://sparky-au.pages.dev',
   output: 'static',
   ...(forDeploy ? { adapter: cloudflare() } : {}),
-  integrations: [sitemap(), ...(withAdmin ? [react(), keystatic()] : [])],
+  integrations: [sitemap(), ...(withAdmin ? [react(), keystaticFixed()] : [])],
   vite: {
     plugins: [tailwindcss()]
   }

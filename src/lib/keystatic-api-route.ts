@@ -1,5 +1,7 @@
-// Overrides @keystatic/astro's injected /api/keystatic route (project routes
-// win over injected ones). Needed because the stock handler touches
+// Replaces @keystatic/astro's injected /api/keystatic route — swapped in by
+// the keystaticFixed() wrapper in astro.config.mjs, so it only exists in
+// ADMIN builds (a prerender:false route in src/pages would break the static
+// CI build: NoAdapterInstalled). Needed because the stock handler touches
 // context.locals.runtime, whose getter THROWS on Astro v6+'s Cloudflare
 // adapter. We hand the stock handler a context whose locals is a plain object
 // carrying the env from cloudflare:workers (prod) / process.env (local dev),
