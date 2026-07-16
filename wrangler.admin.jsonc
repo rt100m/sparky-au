@@ -1,0 +1,19 @@
+// ADMIN worker: serves the full site + the /keystatic editor.
+// Build first: CF_DEPLOY=1 npx astro build
+// Deploy:      npx wrangler deploy --config wrangler.admin.jsonc
+// Secrets (wrangler secret put --config wrangler.admin.jsonc <NAME>):
+//   KEYSTATIC_GITHUB_CLIENT_ID, KEYSTATIC_GITHUB_CLIENT_SECRET, KEYSTATIC_SECRET
+{
+  "name": "sparky-au-admin",
+  "main": "dist/server/entry.mjs",
+  "compatibility_date": "2026-04-15",
+  "compatibility_flags": ["nodejs_compat"],
+  "no_bundle": true,
+  "rules": [{ "type": "ESModule", "globs": ["**/*.js", "**/*.mjs"] }],
+  "assets": { "binding": "ASSETS", "directory": "dist/client" },
+  "kv_namespaces": [{ "binding": "SESSION", "id": "96ad832ee0124e949fad57b40bf7ac74" }],
+  "vars": {
+    "PUBLIC_KEYSTATIC_GITHUB_APP_SLUG": "sparky-au-editor-rt100m"
+  },
+  "observability": { "enabled": true }
+}
