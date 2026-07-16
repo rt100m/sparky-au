@@ -1,0 +1,51 @@
+---
+import Base from '../layouts/Base.astro';
+import { BIZ, SUBURBS } from '../data/site';
+
+const breadcrumb = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: BIZ.url },
+    { '@type': 'ListItem', position: 2, name: 'Service areas', item: `${BIZ.url}/service-areas/` },
+  ],
+};
+---
+<Base
+  title="Service Areas | Electrician Marrickville, Newtown, Inner West Sydney | Voltcraft Electrical"
+  description="Voltcraft Electrical serves Sydney's Inner West — Marrickville, Newtown, Leichhardt, Ashfield, Dulwich Hill and surrounds — with greater Sydney coverage for emergencies and larger jobs."
+  schema={[breadcrumb]}
+>
+  <section class="px-5 md:px-8 pt-16 md:pt-24 pb-20">
+    <div class="mx-auto max-w-[1000px]">
+      <nav aria-label="Breadcrumb" class="mono text-[11px] text-[var(--muted)] tracking-wider">
+        <a href="/" class="hover:text-[var(--copper)]">HOME</a> / SERVICE AREAS
+      </nav>
+      <p class="spec-code mt-10 reveal">THE PATCH</p>
+      <h1 class="text-5xl md:text-7xl font-extralight mt-4 reveal">Based in Marrickville.<br /><span class="filament font-extrabold">Around the corner, mostly.</span></h1>
+      <p class="text-lg text-[var(--muted)] mt-5 max-w-[58ch] reveal">
+        The van lives in the Inner West, which is why most jobs get a same-week slot and emergencies
+        get a fast one. Outside the list? Call anyway — bigger jobs and genuine emergencies travel.
+      </p>
+
+      <h2 class="text-2xl font-medium mt-14 reveal">Inner West — home patch</h2>
+      <ul class="flex flex-wrap gap-2.5 mt-5 list-none reveal" aria-label="Primary suburbs served">
+        {SUBURBS.map((s) => (
+          <li class="mono text-[12px] tracking-wide border border-[var(--hairline)] bg-white/60 rounded-full px-4 py-2">{s}</li>
+        ))}
+      </ul>
+
+      <div class="cert-card p-6 md:p-8 mt-12 reveal">
+        <div class="flex justify-between items-baseline border-b border-[var(--hairline)] pb-3">
+          <span class="mono text-[11px] tracking-[.14em] text-[var(--muted)]">RESPONSE TIMES</span>
+          <span class="mono text-[11px] text-[var(--copper)]">TYPICAL</span>
+        </div>
+        <dl class="mt-4 space-y-3 text-[15px]">
+          <div class="flex justify-between gap-6"><dt>Emergency, Inner West</dt><dd class="mono text-[13px] text-[var(--copper)]">UNDER 90 MIN</dd></div>
+          <div class="flex justify-between gap-6"><dt>Emergency, greater Sydney</dt><dd class="mono text-[13px] text-[var(--copper)]">SAME DAY</dd></div>
+          <div class="flex justify-between gap-6"><dt>Quoted work</dt><dd class="mono text-[13px] text-[var(--copper)]">WITHIN THE WEEK</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+</Base>

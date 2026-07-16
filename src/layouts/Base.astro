@@ -1,0 +1,148 @@
+---
+import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+import { BIZ } from '../data/site';
+
+interface Props {
+  title: string;
+  description: string;
+  schema?: object[];
+  ogImage?: string;
+}
+const { title, description, schema = [], ogImage = '/og.jpg' } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+
+const localBusiness = {
+  '@context': 'https://schema.org',
+  '@type': 'Electrician',
+  '@id': `${BIZ.url}/#business`,
+  name: BIZ.name,
+  legalName: BIZ.legalName,
+  url: BIZ.url,
+  telephone: '+61 400 000 000',
+  email: BIZ.email,
+  image: `${BIZ.url}/og.jpg`,
+  priceRange: '$$',
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Marrickville',
+    addressRegion: 'NSW',
+    postalCode: '2204',
+    addressCountry: 'AU',
+  },
+  geo: { '@type': 'GeoCoordinates', latitude: BIZ.geo.lat, longitude: BIZ.geo.lng },
+  areaServed: { '@type': 'City', name: 'Sydney' },
+  openingHoursSpecification: [
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday'], opens: '07:00', closes: '17:00' },
+  ],
+  aggregateRating: { '@type': 'AggregateRating', ratingValue: BIZ.rating, reviewCount: BIZ.reviewCount },
+  hasCredential: BIZ.licence,
+};
+const allSchema = [localBusiness, ...schema];
+---
+<!doctype html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="sitemap" href="/sitemap-index.xml" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={new URL(ogImage, Astro.site)} />
+  <meta property="og:locale" content="en_AU" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geologica:wght@200;300;500;800&family=IBM+Plex+Mono:wght@400;500&display=swap" />
+  {allSchema.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
+  <ClientRouter />
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+<body class="min-h-screen">
+  <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:bg-[var(--copper)] focus:text-white focus:px-4 focus:py-2">Skip to content</a>
+
+  <header class="sticky top-0 z-40 border-b border-[var(--hairline)] bg-[var(--paper)]/95 backdrop-blur">
+    <div class="mx-auto max-w-[1240px] flex items-center justify-between px-5 md:px-8 py-4">
+      <a href="/" aria-label={`${BIZ.name} home`} class="flex items-baseline gap-2">
+        <span class="font-extrabold text-lg tracking-tight">VOLTCRAFT</span>
+        <span class="mono text-[10px] text-[var(--muted)] tracking-[.14em] hidden sm:inline">ELECTRICAL · SYDNEY</span>
+      </a>
+      <nav aria-label="Main" class="hidden md:flex gap-7 text-[15px]">
+        <a class="hover:text-[var(--copper)] transition-colors" href="/services/">Services</a>
+        <a class="hover:text-[var(--copper)] transition-colors" href="/service-areas/">Areas</a>
+        <a class="hover:text-[var(--copper)] transition-colors" href="/about/">About</a>
+        <a class="hover:text-[var(--copper)] transition-colors" href="/contact/">Contact</a>
+      </nav>
+      <div class="flex items-center gap-4">
+        <span class="mono text-[11px] text-[var(--muted)] hidden lg:inline" aria-label={`Rated ${BIZ.rating} stars from ${BIZ.reviewCount} reviews`}>★ {BIZ.rating} · {BIZ.licence.toUpperCase()}</span>
+        <a href={BIZ.phoneHref} class="btn-copper !py-2.5 !px-5 text-[14px]">{BIZ.phone}</a>
+      </div>
+    </div>
+    <nav aria-label="Main mobile" class="md:hidden flex justify-center gap-6 text-[13px] pb-3 -mt-1">
+      <a href="/services/">Services</a>
+      <a href="/service-areas/">Areas</a>
+      <a href="/about/">About</a>
+      <a href="/contact/">Contact</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <slot />
+
+    <!-- CTA band -->
+    <section class="band-dark px-6 md:px-14 py-20 md:py-28 text-center">
+      <p class="spec-code">GET IT SORTED</p>
+      <h2 class="text-4xl md:text-6xl font-extralight mt-5">One call. <span class="filament font-extrabold">Fixed quote.</span></h2>
+      <p class="text-[var(--bone-dim)] mt-5 max-w-[46ch] mx-auto">Tell me what's going on and you'll have a fixed price and a booking window — usually same day.</p>
+      <div class="mt-9 flex flex-wrap justify-center gap-5 items-center">
+        <a href="/contact/" class="btn-copper">Get a fixed quote</a>
+        <a href={BIZ.phoneHref} class="btn-ghost">CALL {BIZ.phone}</a>
+      </div>
+    </section>
+
+    <footer class="border-t border-[var(--hairline)] px-6 md:px-14 py-10 text-[13px] text-[var(--muted)]">
+      <div class="mx-auto max-w-[1240px] flex flex-wrap gap-x-10 gap-y-3 justify-between">
+        <div>
+          <span class="text-[var(--ink)] font-medium">{BIZ.name}</span> · {BIZ.base}
+          <div class="mono text-[11px] mt-2">{BIZ.licence.toUpperCase()} · {BIZ.abn} · 230V · 50Hz · CERTIFIED TO AS/NZS 3000</div>
+          <div class="test-tag mono text-[10px] tracking-[.12em] mt-4">
+            <span>TESTED &amp; TAGGED</span>
+            <span class="text-[var(--copper)]">{BIZ.licence.toUpperCase()}</span>
+            <span>NEXT DUE 07/27</span>
+          </div>
+        </div>
+        <nav aria-label="Footer" class="flex gap-6">
+          <a href="/services/" class="hover:text-[var(--ink)]">Services</a>
+          <a href="/service-areas/" class="hover:text-[var(--ink)]">Areas</a>
+          <a href="/about/" class="hover:text-[var(--ink)]">About</a>
+          <a href="/contact/" class="hover:text-[var(--ink)]">Contact</a>
+        </nav>
+      </div>
+      <p class="mx-auto max-w-[1240px] mt-6 mono text-[10px] tracking-wider">DEMONSTRATION WEBSITE · ALL BUSINESS DETAILS ARE PLACEHOLDERS</p>
+    </footer>
+  </main>
+
+  <!-- Mobile sticky call button (wrapper owns visibility so btn-copper's display can't override md:hidden) -->
+  <div class="md:hidden fixed bottom-4 left-4 right-4 z-40">
+    <a href={BIZ.phoneHref} class="btn-copper block text-center shadow-lg" aria-label={`Call ${BIZ.name} on ${BIZ.phone}`}>
+      Call the sparky · {BIZ.phone}
+    </a>
+  </div>
+
+  <script>
+    // scroll reveals — fail-safe (html.js gate), fire once; re-run on client-router navigations
+    document.addEventListener('astro:page-load', () => {
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+      }, { rootMargin: '0px 0px -8% 0px' });
+      document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+    });
+  </script>
+</body>
+</html>

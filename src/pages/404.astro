@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import { BIZ } from '../data/site';
+---
+<Base
+  title="Page not found | Voltcraft Electrical"
+  description="That page has tripped. Head back to the switchboard."
+>
+  <section class="px-5 md:px-8 pt-24 pb-24 text-center">
+    <p class="spec-code">FAULT DETECTED</p>
+    <h1 class="text-6xl md:text-8xl font-extralight mt-6">404 — <span class="filament font-extrabold">circuit open.</span></h1>
+    <p class="text-[var(--muted)] mt-5">This page isn't wired to anything. Flip back to the main board.</p>
+    <div class="mt-9 flex justify-center gap-5">
+      <a href="/" class="btn-copper">Back to home</a>
+      <a href={BIZ.phoneHref} class="btn-ghost">CALL {BIZ.phone}</a>
+    </div>
+  </section>
+</Base>

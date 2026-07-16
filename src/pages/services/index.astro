@@ -1,0 +1,40 @@
+---
+import Base from '../../layouts/Base.astro';
+import { BIZ, SERVICES } from '../../data/site';
+
+const breadcrumb = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: BIZ.url },
+    { '@type': 'ListItem', position: 2, name: 'Services', item: `${BIZ.url}/services/` },
+  ],
+};
+---
+<Base
+  title="Electrical Services Sydney | Switchboards, Rewiring, EV Chargers | Voltcraft Electrical"
+  description="Full residential electrical services across Sydney's Inner West: switchboard upgrades, lighting, power points, rewiring, safety inspections, EV chargers and 24/7 emergencies. Fixed quotes."
+  schema={[breadcrumb]}
+>
+  <section class="px-5 md:px-8 pt-16 md:pt-24 pb-20">
+    <div class="mx-auto max-w-[1240px]">
+      <nav aria-label="Breadcrumb" class="mono text-[11px] text-[var(--muted)] tracking-wider">
+        <a href="/" class="hover:text-[var(--copper)]">HOME</a> / SERVICES
+      </nav>
+      <p class="spec-code mt-10 reveal">THE FULL SHEET</p>
+      <h1 class="text-5xl md:text-7xl font-extralight mt-4 reveal">Every job, <span class="filament font-extrabold">priced straight.</span></h1>
+      <p class="text-[var(--muted)] text-lg mt-5 max-w-[56ch] reveal">Six things I do all day, every day. Each one fixed-quoted before work starts and certified when it ends.</p>
+
+      <div class="mt-14 space-y-4">
+        {SERVICES.map((s) => (
+          <a href={`/services/${s.slug}/`} class="cert-card p-6 md:p-8 flex flex-wrap items-baseline gap-x-8 gap-y-3 group reveal hover:-translate-y-0.5 transition-transform duration-200">
+            <span class="mono text-[12px] text-[var(--muted)] tracking-[.14em]">{s.code}</span>
+            <h2 class="text-2xl md:text-3xl font-medium grow group-hover:text-[var(--copper)] transition-colors">{s.title}</h2>
+            <span class="mono text-[12px] text-[var(--copper)]">{s.from.toUpperCase()}</span>
+            <p class="w-full text-[var(--ink-soft)] text-[15px] max-w-[72ch]">{s.short}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>

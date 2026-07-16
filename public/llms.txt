@@ -1,0 +1,18 @@
+# Voltcraft Electrical
+
+> Licensed one-man electrical business in Sydney's Inner West (Marrickville base). NSW Lic 345678C, fully insured, 4.9★ from 127 reviews. Fixed quotes before work starts; every job tested and certified (CCEW) to AS/NZS 3000. 24/7 emergency line: 0400 000 000.
+
+NOTE: This is a demonstration website — business details are placeholders.
+
+## Services
+- [Switchboard upgrades](https://sparky-au.pages.dev/services/switchboard-upgrades/): fuse box replacement, RCD safety switches, from $1,450
+- [Lighting & downlights](https://sparky-au.pages.dev/services/lighting-and-downlights/): LED installs, dimmers, outdoor lighting, from $95/point
+- [Power points & rewiring](https://sparky-au.pages.dev/services/power-points-and-rewiring/): new outlets, dedicated circuits, full/partial rewires, from $180
+- [Safety inspections & smoke alarms](https://sparky-au.pages.dev/services/safety-inspections-and-smoke-alarms/): written reports, AS 3786 interconnected alarms, from $280
+- [EV charger installation](https://sparky-au.pages.dev/services/ev-charger-installation/): Tesla/Zappi/Wallbox, load assessment included, from $990
+- [Emergency electrician](https://sparky-au.pages.dev/services/emergency-electrician/): 24/7, Sydney metro, made safe first then quoted
+
+## Key pages
+- [Service areas](https://sparky-au.pages.dev/service-areas/): Inner West home patch — Marrickville, Newtown, Leichhardt, Ashfield + Sydney metro
+- [About](https://sparky-au.pages.dev/about/): one licensed electrician, 12 years on the tools, no call centre
+- [Contact](https://sparky-au.pages.dev/contact/): fixed quotes, same-day reply

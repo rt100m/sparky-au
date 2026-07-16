@@ -1,0 +1,413 @@
+---
+import Base from '../layouts/Base.astro';
+import { BIZ, SEO, SERVICES, SUBURBS, HOME_FAQS, TRIAGE } from '../data/site';
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: HOME_FAQS.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+<Base
+  title={SEO.title}
+  description={SEO.description}
+  schema={[faqSchema]}
+>
+  <!-- HERO — wide, centred, the animation is the star -->
+  <section class="relative overflow-hidden text-center px-5 pt-16 md:pt-24 pb-0">
+    <p class="spec-code reveal">SYDNEY INNER WEST · LICENSED · INSURED · 24/7</p>
+    <h1 class="hero-line text-[13vw] md:text-[86px] font-extralight mt-6 mx-auto max-w-[16ch]">
+      Wired right.<br /><span class="filament font-extrabold">Certified</span> every time.
+    </h1>
+    <p class="hero-line text-[var(--muted)] text-lg mt-6 max-w-[52ch] mx-auto">
+      One licensed sparky for switchboards, rewiring, lighting, EV chargers and emergencies —
+      fixed quote up front, tested and certified on the way out.
+    </p>
+    <div class="hero-line mt-9 flex flex-wrap justify-center items-center gap-5">
+      <a href="/contact/" class="btn-copper">Get a fixed quote</a>
+      <a href={BIZ.phoneHref} class="btn-ghost">CALL {BIZ.phone}</a>
+    </div>
+
+    <!-- The switchboard: video when present, animated poster otherwise -->
+    <div id="hero-media" class="hero-blend-wrap relative mt-12 md:mt-16 mx-auto max-w-[1240px]">
+      <canvas
+        id="hero-canvas"
+        class="w-full hero-blend hidden"
+        role="img"
+        aria-label="A modern electrical switchboard rotating as you scroll: circuit breakers, safety switches and copper busbars, every circuit labeled"
+      ></canvas>
+      <img
+        id="hero-poster"
+        src="/media/hero-poster.jpg"
+        alt="A modern electrical switchboard: neat rows of circuit breakers, safety switches and copper busbars, every circuit labeled"
+        class="w-full hero-blend"
+        width="1284"
+        height="716"
+        fetchpriority="high"
+      />
+      <p class="mono text-[10px] text-[var(--muted)] tracking-[.14em] text-left mt-3">
+        SWITCHBOARD — SCROLL TO INSPECT · EVERY CIRCUIT TESTED · AS/NZS 3000
+      </p>
+    </div>
+  </section>
+
+  <!-- Trust strip — data-first -->
+  <section class="border-y border-[var(--hairline)] bg-white/50 mt-14">
+    <div class="mx-auto max-w-[1240px] grid grid-cols-2 md:grid-cols-4 divide-x divide-[var(--hairline)]">
+      {[
+        { n: String(BIZ.rating), d: `★ rating · ${BIZ.reviewCount} reviews` },
+        { n: String(BIZ.yearsTrading), d: 'years on the tools' },
+        { n: '100%', d: 'jobs certified (CCEW)' },
+        { n: '24/7', d: 'emergency line', live: true },
+      ].map((s) => (
+        <div class="py-8 md:py-10 text-center reveal">
+          <div class="stat-n text-4xl md:text-5xl font-extralight tracking-tight" data-stat={s.n}>{s.n}</div>
+          <div class="mono text-[11px] text-[var(--muted)] tracking-wider mt-2 uppercase">{s.live && <span class="live-dot mr-1.5" aria-hidden="true"></span>}{s.d}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Services — certificate card grid -->
+  <section class="px-5 md:px-8 py-20 md:py-28" aria-labelledby="services-h">
+    <div class="mx-auto max-w-[1240px]">
+      <p class="spec-code reveal">01 / THE WORK</p>
+      <div class="flex flex-wrap items-end justify-between gap-6 mt-4">
+        <h2 id="services-h" class="text-4xl md:text-6xl font-extralight reveal">What do you need <span class="font-extrabold">sorted?</span></h2>
+        <a href="/services/" class="btn-ghost reveal">ALL SERVICES →</a>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
+        {SERVICES.map((s) => (
+          <a href={`/services/${s.slug}/`} class="cert-card wire-card p-6 pl-7 group reveal">
+            <div class="flex justify-between items-baseline border-b border-[var(--hairline)] pb-3">
+              <span class="mono text-[11px] tracking-[.14em] text-[var(--muted)]">{s.code} / SERVICE</span>
+              <span class="mono text-[11px] text-[var(--copper)]">{s.from.toUpperCase()}</span>
+            </div>
+            <h3 class="text-2xl font-medium mt-4 group-hover:text-[var(--copper)] transition-colors">{s.title}</h3>
+            <p class="text-[var(--ink-soft)] text-[15px] mt-3">{s.short}</p>
+            <span class="mono text-[11px] tracking-wider text-[var(--copper)] mt-5 inline-block">READ MORE →</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Fault finder — interactive triage: symptom → refinement → price band -->
+  <section class="px-5 md:px-8 pb-20 md:pb-28" aria-labelledby="triage-h">
+    <div class="mx-auto max-w-[1240px]">
+      <div class="band-dark rounded-[6px] px-6 md:px-14 py-14 md:py-20 reveal">
+        <p class="spec-code">02 / FAULT FINDER</p>
+        <div class="grid md:grid-cols-[1fr_1.35fr] gap-10 md:gap-16 mt-6 items-start">
+          <div>
+            <h2 id="triage-h" class="text-4xl md:text-5xl font-extralight">What's it going to <span class="filament font-extrabold">cost?</span></h2>
+            <p class="text-[var(--bone-dim)] mt-5 max-w-[42ch]">Pick the fault. Two taps and you're looking at the same price band you'd hear on the phone.</p>
+            <p class="mono text-[10px] tracking-[.16em] text-[var(--bone-dim)] mt-6">NO EMAIL GATE · NO CALLBACK TRAP · REAL BANDS</p>
+          </div>
+          <script type="application/json" id="triage-data" set:html={JSON.stringify(TRIAGE)} />
+          <div id="triage" class="triage-panel" aria-live="polite">
+            <p class="mono text-[11px] tracking-[.18em] text-[var(--bone-dim)]" data-triage-step>STEP 1 / 2 — WHAT'S GOING ON?</p>
+            <div class="mt-4 space-y-2" data-triage-body>
+              {TRIAGE.map((f) => (
+                <a href={f.result?.href ?? f.options?.[0].result.href} class="triage-opt" data-fault={f.code}>
+                  <span class="mono text-[11px] text-[var(--copper-hot)]">{f.code}</span>
+                  <span class="flex-1 text-left">{f.label}</span>
+                  <span class="mono text-[13px]" aria-hidden="true">→</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Process — dark band, circuit spine -->
+  <section class="band-dark px-5 md:px-8 py-20 md:py-28" aria-labelledby="process-h">
+    <div class="mx-auto max-w-[900px] relative">
+      <p class="spec-code">03 / HOW IT RUNS</p>
+      <h2 id="process-h" class="text-4xl md:text-6xl font-extralight mt-4">No surprises. <span class="font-extrabold">By design.</span></h2>
+      <svg id="circuit-spine" class="absolute left-[7px] top-[190px] bottom-0 h-[calc(100%-210px)] w-[2px] hidden md:block" aria-hidden="true" preserveAspectRatio="none" viewBox="0 0 2 100">
+        <line x1="1" y1="0" x2="1" y2="100" stroke="#B4652F" stroke-width="2" pathLength="100" />
+      </svg>
+      <span id="spine-spark" class="hidden md:block" aria-hidden="true"></span>
+      <ol class="mt-14 space-y-12 md:pl-12 list-none">
+        {[
+          { t: 'Tell me the problem', d: 'Call, text or use the form. Photos help. You get a straight answer about urgency and a fixed quote — not an estimate that grows.' },
+          { t: 'The work, done properly', d: 'On time, tidy, to AS/NZS 3000. Anything unexpected inside the wall gets explained and approved before it is touched.' },
+          { t: 'Tested, tagged, certified', d: 'Every circuit tested before I leave, and you get your Certificate of Compliance (CCEW). The paperwork protects you and your insurance.' },
+        ].map((step, i) => (
+          <li class="relative reveal">
+            <span class="mono text-[11px] tracking-[.2em] text-[var(--copper-hot)]">STEP 0{i + 1}</span>
+            <h3 class="text-2xl md:text-3xl font-medium mt-2">{step.t}</h3>
+            <p class="text-[var(--bone-dim)] mt-3 max-w-[58ch]">{step.d}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- Reviews — question-led -->
+  <section class="px-5 md:px-8 py-20 md:py-28" aria-labelledby="reviews-h">
+    <div class="mx-auto max-w-[1240px]">
+      <h2 id="reviews-h" class="text-4xl md:text-6xl font-extralight reveal">Would your neighbours <span class="font-extrabold">recommend him?</span></h2>
+      <p class="mono text-[12px] text-[var(--muted)] tracking-wider mt-4 reveal">★ {BIZ.rating} FROM {BIZ.reviewCount} GOOGLE REVIEWS (PLACEHOLDER)</p>
+      <div class="grid md:grid-cols-3 gap-6 mt-12">
+        {[
+          { q: 'Switchboard replaced in a day, left the place cleaner than he found it, and the certificate was in my inbox before dinner.', name: 'Sarah M', suburb: 'Marrickville', code: 'JOB 2418', job: 'SWITCHBOARD UPGRADE' },
+          { q: 'Quoted a fixed price on the phone, turned up when he said, charged exactly that. Apparently that is rare — it shouldn’t be.', name: 'Dave T', suburb: 'Newtown', code: 'JOB 2431', job: 'REWIRE · 2 ROOMS' },
+          { q: 'Found the fault two other sparkies missed. Explained everything in plain English with photos. Booked him again for the EV charger.', name: 'Priya K', suburb: 'Ashfield', code: 'JOB 2455', job: 'FAULT-FIND + EV CHARGER' },
+        ].map((r) => (
+          <figure class="cert-card p-6 reveal">
+            <div class="flex justify-between items-baseline border-b border-[var(--hairline)] pb-3">
+              <span class="mono text-[11px] tracking-[.14em] text-[var(--muted)]">{r.code} / {r.job}</span>
+              <span class="text-[var(--copper)] text-[13px]" aria-label="Rated 5 stars">★★★★★</span>
+            </div>
+            <blockquote class="mt-4 text-[15px] text-[var(--ink-soft)]">“{r.q}”</blockquote>
+            <figcaption class="mt-5 flex items-center justify-between gap-3">
+              <span class="mono text-[11px] tracking-wider text-[var(--muted)] uppercase">{r.name} · {r.suburb}</span>
+              <span class="mono text-[9px] tracking-[.14em] text-[var(--copper)] border border-[var(--copper)]/50 rounded-[2px] px-2 py-1">CCEW ISSUED ✓</span>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Service area -->
+  <section class="border-t border-[var(--hairline)] px-5 md:px-8 py-20" aria-labelledby="areas-h">
+    <div class="mx-auto max-w-[1240px] grid md:grid-cols-[1fr_1.4fr] gap-10 items-start">
+      <div>
+        <p class="spec-code reveal">04 / SERVICE AREA</p>
+        <h2 id="areas-h" class="text-4xl md:text-5xl font-extralight mt-4 reveal">Inner West first,<br /><span class="font-extrabold">Sydney-wide when it matters.</span></h2>
+        <a href="/service-areas/" class="btn-ghost mt-6 inline-block reveal">ALL AREAS →</a>
+      </div>
+      <div class="marquee reveal" aria-label="Suburbs served">
+        <ul class="marquee-track list-none">
+          {[...SUBURBS, ...SUBURBS].map((s, i) => (
+            <li class="mono text-[11px] tracking-[.1em] uppercase border border-[var(--ink)]/60 bg-white rounded-[2px] px-4 py-2 whitespace-nowrap" aria-hidden={i >= SUBURBS.length ? 'true' : undefined}>{s}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="border-t border-[var(--hairline)] px-5 md:px-8 py-20 md:py-28" aria-labelledby="faq-h">
+    <div class="mx-auto max-w-[820px]">
+      <p class="spec-code reveal">05 / STRAIGHT ANSWERS</p>
+      <h2 id="faq-h" class="text-4xl md:text-5xl font-extralight mt-4 reveal">Asked all the time</h2>
+      <div class="mt-10 divide-y divide-[var(--hairline)]">
+        {HOME_FAQS.map((f) => (
+          <details class="group py-5 reveal">
+            <summary class="flex justify-between items-center cursor-pointer list-none text-lg font-medium">
+              {f.q}
+              <span class="breaker" aria-hidden="true"><span class="breaker-knob"></span></span>
+            </summary>
+            <p class="text-[var(--ink-soft)] mt-3 max-w-[62ch]">{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <script>
+    import { gsap } from 'gsap';
+    import { ScrollTrigger } from 'gsap/ScrollTrigger';
+    gsap.registerPlugin(ScrollTrigger);
+
+    const initHome = () => {
+    if (!document.getElementById('hero-media')) return; // client-router: only on the homepage
+    ScrollTrigger.getAll().forEach((t) => t.kill());
+
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Hero: scroll-scrubbed turntable (motion OK) — poster is the fallback everywhere else.
+    // Mobile runs every 2nd frame (~half the payload); poster stays the LCP either way.
+    const canvas = document.getElementById('hero-canvas') as HTMLCanvasElement | null;
+    const poster = document.getElementById('hero-poster') as HTMLImageElement | null;
+    const desktop = matchMedia('(min-width: 768px)').matches;
+    if (canvas && poster && !reduced) {
+      const STEP = desktop ? 1 : 2;
+      const FRAMES = desktop ? 64 : 32;
+      const src = (i: number) => `/media/turn/frame_${String(i * STEP + 1).padStart(3, '0')}.jpg`;
+      const images: (HTMLImageElement | null)[] = new Array(FRAMES).fill(null);
+      const state = { frame: 0 };
+      let lastDrawn = -1;
+
+      const draw = () => {
+        // draw the nearest loaded frame at or below the target, so scrubbing is smooth while frames stream in
+        let i = Math.round(state.frame);
+        while (i > 0 && !images[i]) i--;
+        const img = images[i];
+        const ctx = canvas.getContext('2d');
+        if (!img || !ctx || i === lastDrawn) return;
+        lastDrawn = i;
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      };
+
+      const load = (i: number) => new Promise<void>((res) => {
+        const img = new Image();
+        img.onload = () => { images[i] = img; res(); };
+        img.onerror = () => res();
+        img.src = src(i);
+      });
+
+      load(0).then(() => {
+        const first = images[0];
+        if (!first) return; // frames missing → poster stays
+        canvas.width = first.naturalWidth;
+        canvas.height = first.naturalHeight;
+        draw();
+        canvas.classList.remove('hidden');
+        poster.classList.add('hidden');
+        for (let i = 1; i < FRAMES; i++) load(i).then(draw);
+
+        gsap.to(state, {
+          frame: FRAMES - 1,
+          ease: 'none',
+          scrollTrigger: { trigger: '#hero-media', start: 'top 80%', end: '+=120%', scrub: 0.6 },
+          onUpdate: draw,
+        });
+      });
+    }
+
+    if (!reduced) {
+      gsap.from('.hero-line', { y: 26, opacity: 0, duration: 0.7, ease: 'power3.out', stagger: 0.12 });
+      // the board "assembles" into place: rises, settles, one clean beat
+      gsap.from('#hero-media', { y: 48, opacity: 0, scale: 0.985, duration: 1.1, ease: 'power3.out', delay: 0.35 });
+
+      // trust stats count up as they enter
+      document.querySelectorAll<HTMLElement>('.stat-n').forEach((el) => {
+        const raw = el.dataset.stat || '';
+        const num = parseFloat(raw);
+        if (Number.isNaN(num)) return; // "24/7" stays static
+        const decimals = raw.includes('.') ? 1 : 0;
+        const suffix = raw.replace(/^[\d.]+/, '');
+        const state = { v: 0 };
+        gsap.to(state, {
+          v: num,
+          duration: 1.4,
+          ease: 'power2.out',
+          scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+          onUpdate: () => { el.textContent = state.v.toFixed(decimals) + suffix; },
+          onComplete: () => { el.textContent = raw; },
+        });
+      });
+
+      // spark micro-interaction on the primary CTA (fine pointers only)
+      if (matchMedia('(pointer: fine)').matches) {
+        document.querySelectorAll<HTMLElement>('.btn-copper').forEach((btn) => {
+          btn.addEventListener('mouseenter', () => {
+            const r = btn.getBoundingClientRect();
+            for (let i = 0; i < 4; i++) {
+              const s = document.createElement('span');
+              s.setAttribute('aria-hidden', 'true');
+              s.style.cssText = `position:fixed;left:${r.right - 6}px;top:${r.top + 4}px;width:3px;height:3px;border-radius:50%;background:var(--copper-hot);pointer-events:none;z-index:60;box-shadow:0 0 6px var(--copper-hot)`;
+              document.body.appendChild(s);
+              gsap.to(s, {
+                x: 8 + i * 9, y: -(10 + i * 7), opacity: 0, scale: 0.4,
+                duration: 0.5 + i * 0.08, ease: 'power2.out',
+                onComplete: () => s.remove(),
+              });
+            }
+          });
+        });
+      }
+
+      const spine = document.querySelector('#circuit-spine line');
+      const spark = document.getElementById('spine-spark');
+      if (spine) {
+        gsap.fromTo(spine, { strokeDasharray: 100, strokeDashoffset: 100 }, {
+          strokeDashoffset: 0,
+          ease: 'none',
+          scrollTrigger: { trigger: '#circuit-spine', start: 'top 70%', end: 'bottom 55%', scrub: 0.5 },
+        });
+      }
+      // the current rides the tip of the spine as it draws
+      if (spine && spark) {
+        const spineEl = document.getElementById('circuit-spine')!;
+        gsap.to(spark, {
+          y: () => spineEl.clientHeight - 10,
+          ease: 'none',
+          scrollTrigger: { trigger: '#circuit-spine', start: 'top 70%', end: 'bottom 55%', scrub: 0.5, invalidateOnRefresh: true },
+        });
+      }
+    }
+
+    // Fault finder — symptom → refinement → price band. Server-rendered links are the no-JS fallback.
+    const triage = document.getElementById('triage');
+    const dataEl = document.getElementById('triage-data');
+    if (triage && dataEl) {
+      type Result = { band: string; when: string; note: string; href: string; cta: string; emergency?: boolean };
+      type Fault = { code: string; label: string; ask?: string; options?: { label: string; result: Result }[]; result?: Result };
+      const FAULTS: Fault[] = JSON.parse(dataEl.textContent || '[]');
+      const stepEl = triage.querySelector('[data-triage-step]') as HTMLElement;
+      const body = triage.querySelector('[data-triage-body]') as HTMLElement;
+      const PHONE_HREF = 'tel:+61400000000';
+
+      const opt = (code: string, label: string, onPick: () => void) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'triage-opt';
+        b.innerHTML = `<span class="mono text-[11px] text-[var(--copper-hot)]">${code}</span><span class="flex-1 text-left">${label}</span><span class="mono text-[13px]" aria-hidden="true">→</span>`;
+        b.addEventListener('click', onPick);
+        return b;
+      };
+
+      const settle = () => {
+        if (!reduced) gsap.from(body.children, { y: 10, opacity: 0, duration: 0.3, ease: 'power2.out', stagger: 0.04 });
+      };
+
+      const showStep1 = () => {
+        stepEl.textContent = "STEP 1 / 2 — WHAT'S GOING ON?";
+        body.replaceChildren(...FAULTS.map((f) =>
+          opt(f.code, f.label, () => (f.options ? showStep2(f) : showResult(f, f.result!)))
+        ));
+        settle();
+      };
+
+      const showStep2 = (f: Fault) => {
+        stepEl.textContent = `STEP 2 / 2 — ${f.ask?.toUpperCase()}`;
+        body.replaceChildren(
+          ...f.options!.map((o, i) => opt(`${f.code}.${i + 1}`, o.label, () => showResult(f, o.result))),
+          backBtn(showStep1)
+        );
+        settle();
+      };
+
+      const backBtn = (to: () => void) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'triage-back mono';
+        b.textContent = '← BACK';
+        b.addEventListener('click', to);
+        return b;
+      };
+
+      const showResult = (f: Fault, r: Result) => {
+        stepEl.textContent = `${f.code} — ${f.label.toUpperCase()}`;
+        const wrap = document.createElement('div');
+        wrap.className = 'triage-result' + (r.emergency ? ' is-emergency' : '');
+        wrap.innerHTML = `
+          <div class="mono text-[11px] tracking-[.18em] ${r.emergency ? 'text-[#E06047]' : 'text-[var(--bone-dim)]'}">${r.when}</div>
+          <div class="triage-band">${r.band}</div>
+          <p class="text-[var(--bone-dim)] text-[15px] mt-3">${r.note}</p>
+          <div class="mt-6 flex flex-wrap gap-4 items-center">
+            <a class="btn-copper !py-3 !px-6 text-[15px]" href="${r.emergency ? PHONE_HREF : '/contact/'}">${r.cta}</a>
+            <a class="btn-ghost" href="${r.href}">THE FULL SERVICE →</a>
+          </div>`;
+        body.replaceChildren(wrap, backBtn(showStep1));
+        settle();
+      };
+
+      showStep1();
+    }
+    };
+
+    document.addEventListener('astro:page-load', initHome);
+  </script>
+</Base>

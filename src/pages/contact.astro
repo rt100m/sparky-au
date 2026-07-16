@@ -1,0 +1,97 @@
+---
+import Base from '../layouts/Base.astro';
+import { BIZ } from '../data/site';
+
+const breadcrumb = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: BIZ.url },
+    { '@type': 'ListItem', position: 2, name: 'Contact', item: `${BIZ.url}/contact/` },
+  ],
+};
+---
+<Base
+  title="Contact | Get a Fixed Electrical Quote — Voltcraft Electrical Sydney"
+  description="Call 0400 000 000 or send the job through the form for a fixed quote. Sydney Inner West electrician, 24/7 emergency line, replies within business hours the same day."
+  schema={[breadcrumb]}
+>
+  <section class="px-5 md:px-8 pt-16 md:pt-24 pb-20">
+    <div class="mx-auto max-w-[1100px]">
+      <nav aria-label="Breadcrumb" class="mono text-[11px] text-[var(--muted)] tracking-wider">
+        <a href="/" class="hover:text-[var(--copper)]">HOME</a> / CONTACT
+      </nav>
+      <p class="spec-code mt-10 reveal">GET A QUOTE</p>
+      <h1 class="text-5xl md:text-7xl font-extralight mt-4 reveal">Tell me <span class="filament font-extrabold">the job.</span></h1>
+
+      <div class="grid md:grid-cols-[1fr_1.2fr] gap-10 mt-12 items-start">
+        <div class="space-y-6">
+          <div class="cert-card p-6 reveal">
+            <span class="mono text-[11px] tracking-[.14em] text-[var(--muted)]">FASTEST</span>
+            <div class="text-2xl font-medium mt-2">Call or text</div>
+            <a href={BIZ.phoneHref} class="btn-copper mt-4 inline-block">{BIZ.phone}</a>
+            <p class="text-[14px] text-[var(--ink-soft)] mt-3">Emergencies: this number, 24/7. If I'm on the tools, text and I'll ring back at the next break.</p>
+          </div>
+          <div class="cert-card p-6 reveal">
+            <span class="mono text-[11px] tracking-[.14em] text-[var(--muted)]">DETAILS</span>
+            <dl class="mt-3 space-y-2 text-[14px]">
+              <div class="flex justify-between gap-4"><dt class="text-[var(--muted)]">Email</dt><dd>{BIZ.email}</dd></div>
+              <div class="flex justify-between gap-4"><dt class="text-[var(--muted)]">Base</dt><dd>{BIZ.base}</dd></div>
+              <div class="flex justify-between gap-4"><dt class="text-[var(--muted)]">Hours</dt><dd>Mon–Fri 7am–5pm · 24/7 emergencies</dd></div>
+              <div class="flex justify-between gap-4"><dt class="text-[var(--muted)]">Licence</dt><dd class="mono text-[12px] text-[var(--copper)]">345678C</dd></div>
+            </dl>
+          </div>
+        </div>
+
+        <form id="quote-form" class="cert-card p-6 md:p-8 reveal" novalidate>
+          <div class="flex justify-between items-baseline border-b border-[var(--hairline)] pb-3">
+            <span class="mono text-[11px] tracking-[.14em] text-[var(--muted)]">QUOTE REQUEST</span>
+            <span class="mono text-[11px] text-[var(--copper)]">REPLY SAME DAY</span>
+          </div>
+          <div class="grid sm:grid-cols-2 gap-5 mt-6">
+            <div>
+              <label for="f-name" class="block text-[14px] font-medium">Name</label>
+              <input id="f-name" name="name" type="text" autocomplete="name" required class="mt-1.5 w-full border border-[var(--hairline)] rounded px-3.5 py-2.5 bg-[var(--paper)] focus:border-[var(--copper)]" />
+            </div>
+            <div>
+              <label for="f-phone" class="block text-[14px] font-medium">Phone</label>
+              <input id="f-phone" name="phone" type="tel" autocomplete="tel" required class="mt-1.5 w-full border border-[var(--hairline)] rounded px-3.5 py-2.5 bg-[var(--paper)] focus:border-[var(--copper)]" />
+            </div>
+            <div class="sm:col-span-2">
+              <label for="f-suburb" class="block text-[14px] font-medium">Suburb</label>
+              <input id="f-suburb" name="suburb" type="text" autocomplete="address-level2" class="mt-1.5 w-full border border-[var(--hairline)] rounded px-3.5 py-2.5 bg-[var(--paper)] focus:border-[var(--copper)]" />
+            </div>
+            <div class="sm:col-span-2">
+              <label for="f-job" class="block text-[14px] font-medium">What needs doing?</label>
+              <textarea id="f-job" name="job" rows="5" required class="mt-1.5 w-full border border-[var(--hairline)] rounded px-3.5 py-2.5 bg-[var(--paper)] focus:border-[var(--copper)]" placeholder="e.g. Switchboard still has old ceramic fuses, two-bedroom house in Dulwich Hill…"></textarea>
+            </div>
+          </div>
+          <button type="submit" class="btn-copper mt-6 w-full sm:w-auto cursor-pointer border-0">Send the job through</button>
+          <p id="form-status" role="status" aria-live="polite" class="mono text-[12px] mt-4 min-h-5"></p>
+          <p class="mono text-[10px] text-[var(--muted)] tracking-wider mt-2">DEMO FORM — SUBMISSIONS ARE NOT SENT ANYWHERE YET</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    document.addEventListener('astro:page-load', () => {
+    const form = document.getElementById('quote-form') as HTMLFormElement | null;
+    const status = document.getElementById('form-status');
+    if (!form || !status) return;
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        status.textContent = 'PLEASE FILL THE REQUIRED FIELDS.';
+        status.setAttribute('style', 'color:#B4262A');
+        return;
+      }
+      // Demo site: no backend wired yet. Real build points this at the client's inbox (Formspree/worker).
+      status.textContent = "SENT (DEMO) — ON A LIVE SITE THIS LANDS IN THE SPARKY'S INBOX + SMS.";
+      status.setAttribute('style', 'color:#3f6b4f');
+      form.reset();
+    });
+    });
+  </script>
+</Base>

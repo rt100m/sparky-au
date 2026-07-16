@@ -1,0 +1,301 @@
+@import "tailwindcss";
+
+/* ── COPPER & DAYLIGHT tokens (see DESIGN.md) ───────────────────── */
+:root {
+  --paper: #F5F2EB;
+  --paper-2: #EDE8DE;
+  --ink: #1C1915;
+  --ink-soft: #4A443A;
+  --muted: #8A8172;
+  --copper: #B4652F;
+  --copper-hot: #E08A47;
+  --hairline: #DDD5C6;
+  --carbon: #16130E;          /* dark punctuation bands */
+  --carbon-2: #1D1912;
+  --bone: #EDE6DA;            /* text on carbon */
+  --bone-dim: #9C937F;
+
+  --font-display: "Geologica", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --shadow-card: 0 1px 2px rgba(28,25,21,.06), 0 10px 30px rgba(28,25,21,.08);
+}
+
+html { scroll-behavior: smooth; background: var(--paper); }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.55;
+}
+
+::selection { background: var(--copper); color: var(--paper); }
+
+h1, h2, h3 { letter-spacing: -0.025em; line-height: 1.05; }
+.mono { font-family: var(--font-mono); }
+
+/* spec-code section header — engraved traffolyte tag, screwed to the page */
+.spec-code {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--carbon);
+  color: var(--bone);
+  padding: 6px 13px;
+  border-radius: 3px;
+}
+.spec-code::before,
+.spec-code::after {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #A99F8C, #3A352C 75%);
+}
+
+.filament {
+  background: linear-gradient(100deg, var(--copper), var(--copper-hot) 55%, var(--copper));
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: filament-sweep 5s var(--ease-out) infinite;
+}
+@keyframes filament-sweep {
+  0%, 60%, 100% { background-position: 0% 0; }
+  80% { background-position: 100% 0; }
+}
+
+/* hero media blends into the paper — no box, no seam */
+.hero-blend { mix-blend-mode: multiply; filter: brightness(1.045); }
+.hero-blend-wrap {
+  mask-image: radial-gradient(115% 95% at 50% 45%, black 52%, transparent 87%);
+  -webkit-mask-image: radial-gradient(115% 95% at 50% 45%, black 52%, transparent 87%);
+}
+
+.btn-copper {
+  display: inline-block;
+  background: var(--copper);
+  color: var(--paper);
+  font-weight: 500;
+  padding: 15px 28px;
+  border-radius: 2px;
+  transition: background .15s var(--ease-out), transform .15s var(--ease-out);
+}
+.btn-copper:hover {
+  background: var(--copper-hot);
+  box-shadow: 0 0 24px color-mix(in srgb, var(--copper-hot) 40%, transparent);
+}
+.btn-copper:active { transform: scale(.97); }
+.btn-outline {
+  display: inline-block;
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  padding: 14px 26px;
+  border-radius: 2px;
+  font-size: 15px;
+  transition: background .15s var(--ease-out), color .15s var(--ease-out), transform .15s var(--ease-out);
+}
+.btn-outline:hover { background: var(--ink); color: var(--paper); }
+.btn-outline:active { transform: scale(.97); }
+.btn-ghost {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: .06em;
+  color: var(--ink);
+  border-bottom: 1px solid var(--copper);
+  padding-bottom: 3px;
+  transition: color .15s var(--ease-out);
+}
+.btn-ghost:hover { color: var(--copper); }
+
+/* dark band variants */
+.band-dark { background: var(--carbon); color: var(--bone); }
+.band-dark .btn-ghost { color: var(--bone); }
+.band-dark .spec-code { background: var(--bone); color: var(--carbon); }
+
+/* certificate card — the signature component */
+.cert-card {
+  background: #fff;
+  border: 1px solid var(--ink);
+  border-radius: 4px;
+  box-shadow: 6px 6px 0 var(--hairline);
+  transition: box-shadow .18s var(--ease-out), transform .18s var(--ease-out);
+}
+/* "stamped" on hover — the certificate gets pressed */
+.cert-card:hover {
+  box-shadow: 2px 2px 0 var(--hairline);
+  transform: translate(3px, 3px);
+}
+
+/* suburb marquee — two duplicated rows drift, pause on hover */
+.marquee { overflow: hidden; }
+.marquee-track {
+  display: flex;
+  gap: 10px;
+  width: max-content;
+  animation: marquee-drift 45s linear infinite;
+}
+.marquee:hover .marquee-track { animation-play-state: paused; }
+@keyframes marquee-drift {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; flex-wrap: wrap; width: auto; }
+  .filament { animation: none; }
+}
+
+/* wiring-core accents — AU cable colours: active brown, neutral blue, earth green/yellow */
+.wire-card { position: relative; overflow: hidden; }
+.wire-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+}
+.wire-card:nth-child(3n+1)::before { background: #6E3B22; }
+.wire-card:nth-child(3n+2)::before { background: #28568F; }
+.wire-card:nth-child(3n)::before {
+  background: repeating-linear-gradient(-45deg, #3E7A3A 0 6px, #C9B42E 6px 12px);
+}
+
+/* breaker toggle — FAQ open/close flips a switch to ON */
+.breaker {
+  width: 36px;
+  height: 19px;
+  border: 1px solid var(--ink);
+  border-radius: 10px;
+  position: relative;
+  flex-shrink: 0;
+  margin-left: 16px;
+  transition: background .2s var(--ease-out), border-color .2s var(--ease-out);
+}
+.breaker-knob {
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 13px; height: 13px;
+  border-radius: 50%;
+  background: var(--ink);
+  transition: transform .2s var(--ease-out), background .2s var(--ease-out);
+}
+details[open] .breaker { background: var(--copper); border-color: var(--copper); }
+details[open] .breaker-knob { transform: translateX(17px); background: var(--paper); }
+
+/* fault finder — the interactive triage panel */
+.triage-opt {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid color-mix(in srgb, var(--bone) 22%, transparent);
+  border-radius: 3px;
+  color: var(--bone);
+  font-size: 15px;
+  cursor: pointer;
+  background: transparent;
+  transition: border-color .15s var(--ease-out), background .15s var(--ease-out), transform .15s var(--ease-out);
+}
+.triage-opt:hover {
+  border-color: var(--copper-hot);
+  background: color-mix(in srgb, var(--copper) 12%, transparent);
+  transform: translateX(3px);
+}
+.triage-back {
+  font-size: 11px;
+  letter-spacing: .14em;
+  color: var(--bone-dim);
+  margin-top: 14px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 4px 0;
+  transition: color .15s var(--ease-out);
+}
+.triage-back:hover { color: var(--copper-hot); }
+.triage-result {
+  border: 1px solid color-mix(in srgb, var(--bone) 22%, transparent);
+  border-left: 4px solid var(--copper);
+  border-radius: 3px;
+  padding: 20px 22px;
+}
+.triage-result.is-emergency { border-left-color: #E06047; }
+.triage-band {
+  font-family: var(--font-mono);
+  font-size: clamp(24px, 3.2vw, 34px);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--copper-hot);
+  margin-top: 8px;
+}
+.triage-result.is-emergency .triage-band { color: #E06047; }
+
+/* the current riding the circuit-spine tip */
+#spine-spark {
+  position: absolute;
+  left: 3px;
+  top: 190px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--copper-hot);
+  box-shadow: 0 0 10px var(--copper-hot), 0 0 22px color-mix(in srgb, var(--copper-hot) 60%, transparent);
+  will-change: transform;
+}
+
+/* live indicator — the RCD test light */
+.live-dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #2F9E44;
+  box-shadow: 0 0 8px rgba(47, 158, 68, .55);
+  animation: live-pulse 2.2s ease-in-out infinite;
+}
+@keyframes live-pulse { 50% { opacity: .4; } }
+
+/* test-and-tag footer badge */
+.test-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--ink);
+  border-radius: 4px;
+  background: #fff;
+  padding: 8px 14px 8px 26px;
+  position: relative;
+  color: var(--ink-soft);
+}
+.test-tag::before {
+  content: '';
+  position: absolute;
+  left: 9px;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+}
+
+:focus-visible {
+  outline: 2px solid var(--copper);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* reveal system — failure-safe: hidden only when JS has tagged <html> */
+html.js .reveal { opacity: 0; transform: translateY(18px); }
+html.js .reveal.is-in { opacity: 1; transform: none; transition: opacity .6s var(--ease-out), transform .6s var(--ease-out); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  html.js .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
